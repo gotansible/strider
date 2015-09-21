@@ -1,0 +1,19 @@
+---
+
+
+# we ignore errors because once a user is created it'll error on future attempts
+- name: config - add admin user
+  command: node bin/strider addUser -l {{ item.email }} -p {{ item.password }} -a {{ item.isAdmin }}
+  args:
+    chdir: "{{ strider_install_dir }}/{{ strider_folder_name }}"
+  ignore_errors: yes
+  with_items: strider_users
+
+- name: config - create log dir
+  file:
+    state=directory
+    path={{ strider_log_dir }}
+    mode=0755
+    owner={{ strider_user }}
+    group={{ strider_group }}
+

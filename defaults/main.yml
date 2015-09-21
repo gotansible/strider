@@ -1,0 +1,19 @@
+---
+
+strider_build_dir: /var/ansible/strider
+strider_version: 1.7.4
+strider_source_url: "https://github.com/Strider-CD/strider/archive/v{{ strider_version }}.zip"
+strider_folder_name: "strider-{{ strider_version }}"
+strider_install_dir: /opt/strider
+strider_log_dir: /var/log/strider
+
+strider_user: strider
+strider_group: strider
+
+strider_mongodb_local: false
+
+strider_users:
+  - email: test@example.com
+    password: testAdmin
+    isAdmin: true
+

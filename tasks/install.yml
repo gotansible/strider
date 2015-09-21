@@ -1,0 +1,61 @@
+---
+
+- name: install - create group
+  group:
+    name={{ strider_group }}
+    system=yes
+
+- name: install - create user
+  user:
+    name={{ strider_user }}
+    group={{ strider_group }}
+    system=yes
+    createhome=no
+
+- name: install - build dir
+  file:
+    state=directory
+    path={{ strider_build_dir }}
+
+- name: install - get source
+  get_url:
+    url: "{{ strider_source_url }}"
+    dest: "{{ strider_build_dir }}/{{ strider_source_url | basename }}"
+
+- name: install - install dir
+  file:
+    state=directory
+    path={{ strider_install_dir }}
+    owner={{ strider_user }}
+    group={{ strider_group }}
+    mode=0755
+
+- name: install - unarchive source
+  unarchive:
+    src={{ strider_build_dir }}/{{ strider_source_url | basename }}
+    dest={{ strider_install_dir }}
+    copy=no
+    owner={{ strider_user }}
+    group={{ strider_group }}
+    mode=0755
+    creates={{ strider_install_dir }}/{{ strider_folder_name }}/main.js
+
+- name: install - npm install
+  npm:
+    path="{{ strider_install_dir }}/{{ strider_folder_name }}"
+
+- name: install - current symlink
+  file:
+    state=link
+    src={{ strider_install_dir }}/{{ strider_folder_name }}
+    path={{ strider_install_dir }}/current
+    owner={{ strider_user }}
+    group={{ strider_group }}
+
+- name: install - start script
+  template:
+    src=start.sh.j2
+    dest={{ strider_install_dir }}/start.sh
+    owner={{ strider_user }}
+    group={{ strider_group }}
+    mode=0755

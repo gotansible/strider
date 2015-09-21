@@ -1,0 +1,6 @@
+---
+- hosts: all
+  sudo: true
+  roles:
+    - role: strider
+      strider_mongodb_local: true
